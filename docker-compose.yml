@@ -1,0 +1,39 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    container_name: "postgres-storage"
+    environment:
+      - POSTGRES_DB=civoo
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+      - TZ=GMT
+      
+    restart: unless-stopped
+    tty: true  
+    ports:
+        - 5432:5432
+    networks:
+          - postgres-network 
+    volumes:
+      - "civoo:/var/lib/postgresql/data"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: "pgadmin-pg"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "pitaplj@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "root"
+    ports:
+      - "16543:80"
+    depends_on:
+      - db
+    networks:
+      - postgres-network
+      
+networks: 
+    postgres-network:
+      driver: bridge  
+    
+volumes:
+  civoo:  
